@@ -1,7 +1,11 @@
 ﻿using HomeLibrary;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace tsd_wpf
 {
@@ -11,6 +15,7 @@ namespace tsd_wpf
         {
             InitializeComponent();
             this.DataContext = this;
+            Darkness = 255;
         }
 
         private ObservableCollection<Book> books = new(MyBookCollection.GetMyCollection());
@@ -33,6 +38,30 @@ namespace tsd_wpf
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedBook"));
             }
         }
+
+        private int darkness;
+
+        public int Darkness
+        {
+            get { return darkness; }
+            set {
+                if (value < 0)
+                {
+                    darkness = 0;
+                }
+                else if (value > 255)
+                {
+                    darkness = 255;
+                }
+                else
+                {
+                    darkness = value;
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Darkness"));
+                UpdateColor();
+            }
+        }
+
 
         private void btAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -57,6 +86,19 @@ namespace tsd_wpf
             else
             {
                 MessageBox.Show("Please select a book to delete", "Delete book", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void UpdateColor()
+        {
+            firstRow.Background = new SolidColorBrush(Color.FromArgb(255, 255, (byte)Darkness, 255));
+        }
+
+        private void tb_Dark_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (tb_Dark.Text == string.Empty)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Darkness"));
             }
         }
     }
