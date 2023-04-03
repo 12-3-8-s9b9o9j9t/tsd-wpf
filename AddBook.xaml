@@ -1,0 +1,64 @@
+﻿<Window x:Class="tsd_wpf.AddBook"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:tsd_wpf"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:hl="clr-namespace:HomeLibrary"
+        mc:Ignorable="d"
+        Title="AddBook" Height="200" Width="220"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="format" MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="hl:BookFormat"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <Style TargetType="Button" x:Key="RoundButton">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5" />
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Content="Title" Margin="5 0 0 0"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding BookTitle, Mode=OneWayToSource, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
+                 Margin="0 5 5 0"/>
+        <Label Grid.Row="1" Content="Author" Margin="5 0 0 0"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BookAuthor, Mode=OneWayToSource, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
+                 Margin="0 5 5 0"/>
+        <Label Grid.Row="2" Content="Year" Margin="5 0 0 0"/>
+        <TextBox Name="yearBox" Grid.Row="2" Grid.Column="1" Text="{Binding BookYear, Mode=OneWayToSource, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
+                 Margin="0 5 5 0"/>
+        <Label Grid.Row="3" Content="IsRead" Margin="5 0 0 0"/>
+        <CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Height="15"
+                  Margin="0 5 0 0"
+                  IsChecked="{Binding BookIsRead, Mode=OneWayToSource}"/>
+        <Label Grid.Row="4" Content="Format" Margin="5 0 0 0"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" Margin="0 5 5 2" Padding="3 0 0 0"
+                  ItemsSource="{Binding Source={StaticResource format}}"
+                  Text="{Binding BookFormat, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+        <Button Name="bt_Ok" Grid.Row="5" Content="Ok" Width="50" Height="20" HorizontalAlignment="Center"
+                Style="{StaticResource RoundButton}" Background="WhiteSmoke"
+                Click="bt_Ok_Click"/>
+        <Button Name="bt_Cancel" Grid.Row="5" Grid.Column="1" Content="Cancel" Width="50" Height="20" HorizontalAlignment="Center"
+                Style="{StaticResource RoundButton}" Background="WhiteSmoke"
+                Click="bt_Cancel_Click"/>
+    </Grid>
+</Window>

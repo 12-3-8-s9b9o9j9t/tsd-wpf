@@ -4,9 +4,123 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:tsd_wpf"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:hl="clr-namespace:HomeLibrary"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:MyConv x:Key="conv" />
+        <ObjectDataProvider x:Key="format" MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="hl:BookFormat"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <DataTemplate x:Key="bookTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource conv}}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Path=Id}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding Path=Title}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="{Binding Path=IsRead}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <Style TargetType="Button" x:Key="RoundButton">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5" />
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                        <RowDefinition Height=" 50"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="My Books" Padding="30 0 0 0"/>
+                    <Grid Grid.Row="1" Margin="10,0,40,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="17" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="ID" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="Title" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="IsRead" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ListBox Name="listBox" ItemsSource="{Binding Books}"
+                                 ItemTemplate="{ StaticResource bookTemplate }" 
+                                 Grid.Row="1" BorderThickness="0" HorizontalContentAlignment="Stretch"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 SelectedItem="{Binding SelectedBook}"/>
+                    </Grid>
+                    <Button Grid.Row="2" Name="btAdd"  Content="Add" Width="50" Height="20" HorizontalAlignment="Left"
+                            Margin="30 0 0 0" Style="{StaticResource RoundButton}"
+                            Background="WhiteSmoke" Click="btAdd_Click"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="140"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="ID" Margin="20 0 0 0"/>
+                    <Label Grid.Column="1" Content="{Binding SelectedBook.Id}"/>
+                    <Label Grid.Row="1" Content="Title" Margin="20 0 0 0"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedBook.Title}" Margin="0 5 20 0"/>
+                    <Label Grid.Row="2" Content="Author" Margin="20 0 0 0"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedBook.Author}" Margin="0 5 80 0"/>
+                    <Label Grid.Row="3" Content="Year" Margin="20 0 0 0"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedBook.Year}" Margin="0 5 80 0"/>
+                    <Label Grid.Row="4" Content="IsRead" Margin="20 0 0 0"/>
+                    <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding SelectedBook.IsRead}" HorizontalAlignment="Left"
+                              Height="15" Margin="0 5 0 0"/>
+                    <Label Grid.Row="5" Content="Format" Margin="20 0 0 0"/>
+                    <ComboBox Grid.Row="5" Grid.Column="1" Margin="0 5 80 2" Padding="3 0 0 0"
+                              ItemsSource="{Binding Source={StaticResource format}}"
+                              Text="{Binding SelectedBook.Format}"/>
+                </Grid>
+                <Button Grid.Row="2" Name="btDel"  Content="Delete" Width="50" Height="20" HorizontalAlignment="Right"
+                            Margin="0 0 30 0" Style="{StaticResource RoundButton}"
+                            Background="WhiteSmoke" Click="btDel_Click"/>
+            </Grid>
+        </Grid>
+        <Slider Grid.Row="2"/>
     </Grid>
 </Window>
